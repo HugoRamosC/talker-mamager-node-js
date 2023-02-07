@@ -42,4 +42,16 @@ app.get('/talker', async (_req, res) => {
   }
 });
 
+app.get('/talker/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const talkers = await readFile();
+    const talkerFound = talkers.find((t) => +t.id === +id);
+    if (!talkerFound) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+    return res.status(HTTP_OK_STATUS).json(talkerFound);
+  } catch (err) {
+    return res.status(500).json({ message: `Internar error ${err}` });
+  }
+});
+
 module.exports = app;
