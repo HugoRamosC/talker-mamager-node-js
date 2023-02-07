@@ -1,23 +1,20 @@
 const emailValidator = require('email-validator');
 
-// const HTTP_BADREQUEST_STATUS = 400;
-
-const loginValidator = (email, password) => {
-  // const { email, password } = req.body;
-  let message = false;
+const loginValidator = (req, res, next) => {
+  const { email, password } = req.body;
   if (!email) {
-    message = 'O campo "email" é obrigatório';
-  } else if (!emailValidator.validate(email)) {
-    message = 'O "email" deve ter o formato "email@email.com"';
-  } else if (!password) {
-    message = 'O campo "password" é obrigatório';
-  } else if (password.length < 6) {
-    message = 'O "password" deve ter pelo menos 6 caracteres';
-  } 
-  // res.status(HTTP_BADREQUEST_STATUS)
-  //     .json({ message });
-  return message;
-  // next();
+    return res.status(400).json({ message: 'O campo "email" é obrigatório' });
+  }
+  if (!emailValidator.validate(email)) {
+    return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
+  }
+  if (!password) {
+    return res.status(400).json({ message: 'O campo "password" é obrigatório' });
+  }
+  if (password.length < 6) {
+    return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
+  }
+  next();
 };
 
 module.exports = { loginValidator };

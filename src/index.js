@@ -8,7 +8,7 @@ app.use(express.json());
 
 const HTTP_OK_STATUS = 200;
 // const HTTP_CREATED_STATUS = 201;
-const HTTP_BADREQUEST_STATUS = 400;
+// const HTTP_BADREQUEST_STATUS = 400;
 const HTTP_NOT_FOUND_STATUS = 404;
 // const HTTP_INTERNAL_SERVER_ERROR_STATUS = 500;
 
@@ -45,15 +45,9 @@ app.get('/talker/:id', async (req, res) => {
   }
 });
 
-app.post('/login', async (req, res) => {
+app.post('/login', loginValidator, async (req, res) => {
   try {
-    const { email, password } = req.body;
     const token = await tokenGenarator();
-    const message = loginValidator(email, password);
-    if (message) {
-      return res.status(HTTP_BADREQUEST_STATUS)
-        .json({ message });
-    }
     return res.status(HTTP_OK_STATUS).json({ token });
   } catch (err) {
     return res.status(500).json({ message: `Internor error ${err}` });
