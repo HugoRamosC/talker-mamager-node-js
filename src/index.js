@@ -1,16 +1,15 @@
 const express = require('express');
-const cryptoRandomString = require('crypto-random-string');
-const { readFile } = require('./utils/fs/readData');
+const { readData } = require('./utils/fs/readData');
+const { tokenGenarator } = require('./utils/tokenGenarator');
+const { loginValidator } = require('./utils/loginValidator');
 
 const app = express();
 app.use(express.json());
 
-const token = cryptoRandomString({ length: 16 });
-
 const HTTP_OK_STATUS = 200;
-const HTTP_CREATED_STATUS = 201;
-const HTTP_UNAUTHORIZED_STATUS = 401;
-// const HTTP_NOT_FOUND_STATUS = 404;
+// const HTTP_CREATED_STATUS = 201;
+const HTTP_BADREQUEST_STATUS = 400;
+const HTTP_NOT_FOUND_STATUS = 404;
 // const HTTP_INTERNAL_SERVER_ERROR_STATUS = 500;
 
 const PORT = '3000';
@@ -26,8 +25,8 @@ app.get('/', (_request, response) => {
 
 app.get('/talker', async (_req, res) => {
   try {
-    const talkers = await readFile();
-    if (!talkers) return res.status(404).send([]);
+    const talkers = await readData();
+    if (!talkers) return res.status(HTTP_NOT_FOUND_STATUS).send([]);
     return res.status(HTTP_OK_STATUS).json(talkers);
   } catch (err) {
     return res.status(500).json({ message: `Internar error ${err}` });
@@ -37,7 +36,7 @@ app.get('/talker', async (_req, res) => {
 app.get('/talker/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const talkers = await readFile();
+    const talkers = await readData();
     const talkerFound = talkers.find((t) => +t.id === +id);
     if (!talkerFound) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
     return res.status(HTTP_OK_STATUS).json(talkerFound);
@@ -49,13 +48,15 @@ app.get('/talker/:id', async (req, res) => {
 app.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(HTTP_UNAUTHORIZED_STATUS)
-        .json({ message: 'Acesso não autorizado. Verifique suas credenciais' });
+    const token = await tokenGenarator();
+    const message = loginValidator(email, password);
+    if (message) {
+      return res.status(HTTP_BADREQUEST_STATUS)
+        .json({ message });
     }
-    return res.status(HTTP_CREATED_STATUS).json(token);
+    return res.status(HTTP_OK_STATUS).json({ token });
   } catch (err) {
-    return res.status(500).json({ message: `Internar error ${err}` });
+    return res.status(500).json({ message: `Internor error ${err}` });
   }
 });
 
