@@ -76,14 +76,16 @@ app.post('/talker',
       const { name, age, talk: { watchedAt, rate } } = req.body;
       const talkers = await readData();
       const newTalker = {
-        id: talkers[talkers.length - 1].id + 1,
         name,
         age,
+        id: talkers[talkers.length - 1].id + 1,
         talk: { watchedAt, rate },
       };
-      const newArrTalkers = [...talkers, newTalker];
-      await writeData(newArrTalkers);
-      return res.status(HTTP_CREATED_STATUS).json({ newArrTalkers });
+  console.log(newTalker);
+      talkers.push(newTalker);
+  console.log(talkers);
+      await writeData(talkers);
+      return res.status(HTTP_CREATED_STATUS).json({ newTalker });
     } catch (err) {
       return res.status(HTTP_INTERNAL_SERVER_ERROR_STATUS)
         .json({ message: `Internor error ${err}` });

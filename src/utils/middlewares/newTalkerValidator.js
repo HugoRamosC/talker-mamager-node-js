@@ -56,8 +56,6 @@ const talkValidator = async (req, res, next) => {
 
 const watchedAtValidator = async (req, res, next) => {
   const { talk } = req.body;
-  // console.log(moment(talk.watchedAt).format('DD/MM/YYYY'));
-  console.log(moment(talk.watchedAt).format('DD/MM/YYYY'));
   if (!talk.watchedAt) {
     return res.status(HTTP_BADREQUEST_STATUS)
       .json({ message: 'O campo "watchedAt" é obrigatório' });
@@ -66,7 +64,7 @@ const watchedAtValidator = async (req, res, next) => {
     return res.status(HTTP_BADREQUEST_STATUS)
       .json({ message: 'O campo "watchedAt" é obrigatório' });
   }
-  if (!moment(talk.watchedAt).format('DD/MM/YYYY')) {
+  if (!moment(talk.watchedAt, 'DD/MM/YYYY', true).isValid()) {
     return res.status(HTTP_BADREQUEST_STATUS)
       .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
@@ -76,7 +74,7 @@ const watchedAtValidator = async (req, res, next) => {
 const rateValidator = async (req, res, next) => {
   const { talk } = req.body;
   const rateNumbers = [1, 2, 3, 4, 5];
-  if (!talk.rate) {
+  if (Number.isNaN(+talk.rate)) {
     return res.status(HTTP_BADREQUEST_STATUS)
       .json({ message: 'O campo "rate" é obrigatório' });
   }
