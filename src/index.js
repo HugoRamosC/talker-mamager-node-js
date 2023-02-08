@@ -118,4 +118,17 @@ app.put('/talker/:id',
     }
   });
 
+app.delete('/talker/:id', tokenValidator, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const talkers = await readData();
+    const filtredTalkers = talkers.filter((t) => +t.id !== +id);
+    await writeData(filtredTalkers);
+    return res.status(HTTP_NO_CONTENT_STATUS).send();
+  } catch (err) {
+    return res.status(HTTP_INTERNAL_SERVER_ERROR_STATUS)
+        .json({ message: `Internor error ${err}` });
+  }
+});
+
 module.exports = app;
