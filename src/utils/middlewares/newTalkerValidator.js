@@ -4,11 +4,11 @@ const HTTP_BADREQUEST_STATUS = 400;
 const HTTP_UNAUTHORIZED_STATUS = 401;
 
 const tokenValidator = async (req, res, next) => {
-  const { token } = req.headers;
-  if (!token) {
+  const { authorization } = req.headers;
+  if (!authorization) {
     return res.status(HTTP_UNAUTHORIZED_STATUS).json({ message: 'Token não encontrado' });
   }
-  if (token.length !== 16) {
+  if (authorization.length !== 16) {
     return res.status(HTTP_UNAUTHORIZED_STATUS).json({ message: 'Token inválido' });
   }
   next();
@@ -47,20 +47,40 @@ const ageValidator = async (req, res, next) => {
 };
 
 const talkValidator = async (req, res, next) => {
-  const { talk, talk: { watchedAt, rate } } = req.body;
-  const rateNumbers = [1, 2, 3, 4, 5];
+  const { talk } = req.body;
   if (!talk) {
     return res.status(HTTP_BADREQUEST_STATUS).json({ message: 'O campo "talk" é obrigatório' });
   }
-  if (!watchedAt) {
+  next();
+};
+
+const watchedAtValidator = async (req, res, next) => {
+  const { talk } = req.body;
+  // console.log(moment(talk.watchedAt).format('DD/MM/YYYY'));
+  console.log(moment(talk.watchedAt).format('DD/MM/YYYY'));
+  if (!talk.watchedAt) {
     return res.status(HTTP_BADREQUEST_STATUS)
       .json({ message: 'O campo "watchedAt" é obrigatório' });
   }
-  if (moment(watchedAt).format('DD/MM/YYYY')) {
+  if (!talk.watchedAt) {
+    return res.status(HTTP_BADREQUEST_STATUS)
+      .json({ message: 'O campo "watchedAt" é obrigatório' });
+  }
+  if (!moment(talk.watchedAt).format('DD/MM/YYYY')) {
     return res.status(HTTP_BADREQUEST_STATUS)
       .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
-  if (!rateNumbers.includes(rate)) {
+  next();
+};
+
+const rateValidator = async (req, res, next) => {
+  const { talk } = req.body;
+  const rateNumbers = [1, 2, 3, 4, 5];
+  if (!talk.rate) {
+    return res.status(HTTP_BADREQUEST_STATUS)
+      .json({ message: 'O campo "rate" é obrigatório' });
+  }
+  if (!rateNumbers.includes(talk.rate)) {
     return res.status(HTTP_BADREQUEST_STATUS)
       .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
@@ -72,4 +92,6 @@ module.exports = {
   nameValidator,
   ageValidator,
   talkValidator,
+  watchedAtValidator,
+  rateValidator,
 };
