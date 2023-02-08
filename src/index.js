@@ -43,6 +43,19 @@ app.get('/talker', async (_req, res) => {
   }
 });
 
+app.get('/talker/search', tokenValidator, async (req, res) => {
+  try {
+    const { q } = req.query;
+    const talkers = await readData();
+    const talkersFound = talkers.filter((t) => +t.name.includes(q));
+    if (!q) return res.status(HTTP_OK_STATUS).json(talkers);
+    return res.status(HTTP_OK_STATUS).json(talkersFound);
+  } catch (err) {
+    return res.status(HTTP_INTERNAL_SERVER_ERROR_STATUS)
+      .json({ message: `Internar error ${err}` });
+  }
+});
+
 app.get('/talker/:id', async (req, res) => {
   try {
     const { id } = req.params;
