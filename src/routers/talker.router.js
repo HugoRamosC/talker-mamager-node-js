@@ -10,8 +10,8 @@ const {
   rateValidator,
 } = require('../utils/middlewares/talkerValidator');
 
-const app = express();
-app.use(express.json());
+const talkerRouter = express.Router();
+// talkerRouter.use(express.json());
 
 const HTTP_OK_STATUS = 200;
 const HTTP_CREATED_STATUS = 201;
@@ -19,18 +19,7 @@ const HTTP_NO_CONTENT_STATUS = 204;
 const HTTP_NOT_FOUND_STATUS = 404;
 const HTTP_INTERNAL_SERVER_ERROR_STATUS = 500;
 
-const PORT = '3000';
-
-app.listen(PORT, () => {
-  console.log('Online');
-});
-
-// não remova esse endpoint, e para o avaliador funcionar
-app.get('/', (_request, response) => {
-  response.status(HTTP_OK_STATUS).send();
-});
-
-app.get('/talker', async (_req, res) => {
+talkerRouter.get('/talker', async (_req, res) => {
   try {
     const talkers = await readData();
     if (!talkers) return res.status(HTTP_NOT_FOUND_STATUS).send([]);
@@ -41,7 +30,7 @@ app.get('/talker', async (_req, res) => {
   }
 });
 
-app.get('/talker/search', tokenValidator, async (req, res) => {
+talkerRouter.get('/talker/search', tokenValidator, async (req, res) => {
   try {
     const { q } = req.query;
     const talkers = await readData();
@@ -54,7 +43,7 @@ app.get('/talker/search', tokenValidator, async (req, res) => {
   }
 });
 
-app.get('/talker/:id', async (req, res) => {
+talkerRouter.get('/talker/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const talkers = await readData();
@@ -67,7 +56,7 @@ app.get('/talker/:id', async (req, res) => {
   }
 });
 
-app.post('/talker',
+talkerRouter.post('/talker',
   tokenValidator,
   nameValidator,
   ageValidator,
@@ -92,7 +81,7 @@ app.post('/talker',
     }
   });
 
-app.put('/talker/:id',
+talkerRouter.put('/talker/:id',
   tokenValidator,
   nameValidator,
   ageValidator,
@@ -119,7 +108,7 @@ app.put('/talker/:id',
     }
   });
 
-app.delete('/talker/:id', tokenValidator, async (req, res) => {
+talkerRouter.delete('/talker/:id', tokenValidator, async (req, res) => {
   try {
     const { id } = req.params;
     const talkers = await readData();
@@ -132,4 +121,4 @@ app.delete('/talker/:id', tokenValidator, async (req, res) => {
   }
 });
 
-module.exports = app;
+module.exports = talkerRouter;
