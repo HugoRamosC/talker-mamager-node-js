@@ -40,16 +40,16 @@ talkerRouter.get('/talker/search', tokenValidator, async (req, res, next) => {
   }
 });
 
-talkerRouter.get('/talker/:id', async (req, res) => {
+talkerRouter.get('/talker/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
     const talkers = await readData();
     const talkerFound = talkers.find((t) => +t.id === +id);
-    if (!talkerFound) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+    if (!talkerFound) next({ ...HTTP_NOT_FOUND_STATUS, message: 'Pessoa palestrante não encontrada' });
+    // return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
     return res.status(HTTP_OK_STATUS).json(talkerFound);
   } catch (err) {
-    return res.status(HTTP_INTERNAL_SERVER_ERROR_STATUS)
-      .json({ message: `Internar error ${err}` });
+    next(err);
   }
 });
 
