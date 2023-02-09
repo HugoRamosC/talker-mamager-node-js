@@ -104,7 +104,7 @@ talkerRouter.put('/talker/:id',
     }
   });
 
-talkerRouter.delete('/talker/:id', tokenValidator, async (req, res) => {
+talkerRouter.delete('/talker/:id', tokenValidator, async (req, res, next) => {
   try {
     const { id } = req.params;
     const talkers = await readData();
@@ -112,8 +112,7 @@ talkerRouter.delete('/talker/:id', tokenValidator, async (req, res) => {
     await writeData(filtredTalkers);
     return res.status(HTTP_NO_CONTENT_STATUS).send();
   } catch (err) {
-    return res.status(HTTP_INTERNAL_SERVER_ERROR_STATUS)
-        .json({ message: `Internor error ${err}` });
+    next(err);
   }
 });
 
