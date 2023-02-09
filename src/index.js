@@ -1,5 +1,6 @@
 const express = require('express');
 const routers = require('./routers/index');
+const errorMiddleware = require('./utils/middlewares/errorMiddleware');
 
 const app = express();
 app.use(express.json());
@@ -16,5 +17,7 @@ app.listen(PORT, () => {
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
+
+app.use(errorMiddleware);
 
 module.exports = app;
