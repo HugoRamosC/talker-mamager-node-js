@@ -6,7 +6,6 @@ const loginRouter = express();
 loginRouter.use(express.json());
 
 const HTTP_OK_STATUS = 200;
-// const HTTP_INTERNAL_SERVER_ERROR_STATUS = 500;
 
 loginRouter.post('/login', loginValidator, async (_req, res, next) => {
   try {
@@ -14,8 +13,6 @@ loginRouter.post('/login', loginValidator, async (_req, res, next) => {
     return res.status(HTTP_OK_STATUS).json({ token });
   } catch (err) {
     next(err);
-    // return res.status(HTTP_INTERNAL_SERVER_ERROR_STATUS)
-    //   .json({ message: `Internor error ${err}` });
   }
 });
 
