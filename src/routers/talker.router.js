@@ -14,7 +14,7 @@ const talkerRouter = express.Router();
 
 const HTTP_OK_STATUS = 200;
 const HTTP_CREATED_STATUS = 201;
-const HTTP_NO_CONTENT_STATUS = { status: 204 };
+const HTTP_NO_CONTENT_STATUS = 204;
 const HTTP_NOT_FOUND_STATUS = { status: 404 };
 
 talkerRouter.get('/talker', async (_req, res, next) => {
