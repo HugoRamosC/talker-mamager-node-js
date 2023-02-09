@@ -12,7 +12,7 @@ const {
 
 const talkerRouter = express.Router();
 
-const HTTP_OK_STATUS = { status: 200 };
+const HTTP_OK_STATUS = 200;
 const HTTP_CREATED_STATUS = { status: 201 };
 const HTTP_NO_CONTENT_STATUS = { status: 204 };
 const HTTP_NOT_FOUND_STATUS = { status: 404 };
@@ -28,7 +28,7 @@ talkerRouter.get('/talker', async (_req, res, next) => {
   }
 });
 
-talkerRouter.get('/talker/search', tokenValidator, async (req, res) => {
+talkerRouter.get('/talker/search', tokenValidator, async (req, res, next) => {
   try {
     const { q } = req.query;
     const talkers = await readData();
@@ -36,8 +36,7 @@ talkerRouter.get('/talker/search', tokenValidator, async (req, res) => {
     if (!q) return res.status(HTTP_OK_STATUS).json(talkers);
     return res.status(HTTP_OK_STATUS).json(talkersFound);
   } catch (err) {
-    return res.status(HTTP_INTERNAL_SERVER_ERROR_STATUS)
-      .json({ message: `Internar error ${err}` });
+    next(err);
   }
 });
 
