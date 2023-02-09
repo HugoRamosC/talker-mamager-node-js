@@ -1,5 +1,5 @@
 const express = require('express');
-const routers = require('./routers');
+const routers = require('./routers/index');
 // const { readData } = require('./utils/fs/readData');
 // const { writeData } = require('./utils/fs/writeData');
 // const { tokenGenarator } = require('./utils/middlewares/tokenGenarator');

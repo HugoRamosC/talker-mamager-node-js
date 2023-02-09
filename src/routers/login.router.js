@@ -8,16 +8,16 @@ loginRouter.use(express.json());
 const HTTP_OK_STATUS = 200;
 const HTTP_INTERNAL_SERVER_ERROR_STATUS = 500;
 
-const PORT = '3000';
+// const PORT = '3000';
 
-loginRouter.listen(PORT, () => {
-  console.log('Online');
-});
+// loginRouter.listen(PORT, () => {
+//   console.log('Online');
+// });
 
-// não remova esse endpoint, e para o avaliador funcionar
-loginRouter.get('/', (_request, response) => {
-  response.status(HTTP_OK_STATUS).send();
-});
+// // não remova esse endpoint, e para o avaliador funcionar
+// loginRouter.get('/', (_request, response) => {
+//   response.status(HTTP_OK_STATUS).send();
+// });
 
 loginRouter.post('/login', loginValidator, async (_req, res) => {
   try {
