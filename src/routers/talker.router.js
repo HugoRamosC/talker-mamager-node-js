@@ -16,15 +16,14 @@ const HTTP_OK_STATUS = 200;
 const HTTP_CREATED_STATUS = 201;
 const HTTP_NO_CONTENT_STATUS = { status: 204 };
 const HTTP_NOT_FOUND_STATUS = { status: 404 };
-const HTTP_INTERNAL_SERVER_ERROR_STATUS = { status: 500 };
 
 talkerRouter.get('/talker', async (_req, res, next) => {
   try {
     const talkers = await readData();
-    if (!talkers) next({ ...HTTP_NOT_FOUND_STATUS, message: [] });
+    if (!talkers) return next({ ...HTTP_NOT_FOUND_STATUS, message: [] });
     return res.status(HTTP_OK_STATUS).json(talkers);
   } catch (err) {
-    next(err);
+    return next(err);
   }
 });
 
@@ -36,7 +35,7 @@ talkerRouter.get('/talker/search', tokenValidator, async (req, res, next) => {
     if (!q) return res.status(HTTP_OK_STATUS).json(talkers);
     return res.status(HTTP_OK_STATUS).json(talkersFound);
   } catch (err) {
-    next(err);
+    return next(err);
   }
 });
 
@@ -46,11 +45,11 @@ talkerRouter.get('/talker/:id', async (req, res, next) => {
     const talkers = await readData();
     const talkerFound = talkers.find((t) => +t.id === +id);
     if (!talkerFound) {
-      next({ ...HTTP_NOT_FOUND_STATUS, message: 'Pessoa palestrante não encontrada' });
+      return next({ ...HTTP_NOT_FOUND_STATUS, message: 'Pessoa palestrante não encontrada' });
     }
     return res.status(HTTP_OK_STATUS).json(talkerFound);
   } catch (err) {
-    next(err);
+    return next(err);
   }
 });
 
@@ -74,7 +73,7 @@ talkerRouter.post('/talker',
       await writeData(talkers);
       return res.status(HTTP_CREATED_STATUS).json(newTalker);
     } catch (err) {
-      next(err);
+      return next(err);
     }
   });
 
@@ -100,7 +99,7 @@ talkerRouter.put('/talker/:id',
       await writeData(talkers);
       return res.status(HTTP_OK_STATUS).json(newTalker);
     } catch (err) {
-      next(err);
+      return next(err);
     }
   });
 
@@ -112,7 +111,7 @@ talkerRouter.delete('/talker/:id', tokenValidator, async (req, res, next) => {
     await writeData(filtredTalkers);
     return res.status(HTTP_NO_CONTENT_STATUS).send();
   } catch (err) {
-    next(err);
+    return next(err);
   }
 });
 
