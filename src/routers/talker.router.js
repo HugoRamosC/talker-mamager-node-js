@@ -84,7 +84,7 @@ talkerRouter.put('/talker/:id',
   ageValidator,
   talkValidator,
   watchedAtValidator,
-  rateValidator, async (req, res) => {
+  rateValidator, async (req, res, next) => {
     try {
       const { id } = req.params;
       const talkers = await readData();
@@ -100,8 +100,7 @@ talkerRouter.put('/talker/:id',
       await writeData(talkers);
       return res.status(HTTP_OK_STATUS).json(newTalker);
     } catch (err) {
-      return res.status(HTTP_INTERNAL_SERVER_ERROR_STATUS)
-        .json({ message: `Internor error ${err}` });
+      next(err);
     }
   });
 
