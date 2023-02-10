@@ -8,7 +8,7 @@ const {
   talkValidator,
   watchedAtValidator,
   rateValidator,
-} = require('../utils/middlewares/talkerValidator');
+} = require('../middlewares/talkerValidator');
 
 const talkerRouter = express.Router();
 

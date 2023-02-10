@@ -1,6 +1,6 @@
 const express = require('express');
 const routers = require('./routers/index');
-const errorMiddleware = require('./utils/middlewares/errorMiddleware');
+const errorMiddleware = require('./middlewares/errorMiddleware');
 
 const app = express();
 app.use(express.json());

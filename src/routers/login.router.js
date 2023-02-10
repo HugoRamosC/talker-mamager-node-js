@@ -1,6 +1,6 @@
 const express = require('express');
-const { tokenGenarator } = require('../utils/middlewares/tokenGenarator');
-const { loginValidator } = require('../utils/middlewares/loginValidator');
+const { tokenGenarator } = require('../middlewares/tokenGenarator');
+const { loginValidator } = require('../middlewares/loginValidator');
 
 const loginRouter = express();
 loginRouter.use(express.json());
