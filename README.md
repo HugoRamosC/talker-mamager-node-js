@@ -1,4 +1,6 @@
-# Projeto Talker Manager 
+# Projeto Talker Manager
+
+[MEUS COMMITS](https://github.com/HugoRamosC/talker-manager/commits)
 
 ## O que foi desenvolvido:
 
