@@ -1,6 +1,4 @@
-# :construction: README customizado em construção ! :construction:
-
-## Projeto Talker Manager 
+#Projeto Talker Manager 
 
 ## O que foi desenvolvido:
 
